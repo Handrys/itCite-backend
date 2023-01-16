@@ -62,14 +62,11 @@ app.get('/test', (req,res) => {
 
 app.get('/posts', PostController.getAll);
 app.get('/posts_news', PostController.getAllNews);
-app.get('/posts_reviews', PostController.getAllReviews);
-app.get('/posts_articles', PostController.getAllArticles);
 app.get('/posts/tags', PostController.getLastTags);
 app.get('/posts/:id', PostController.getOne);
+
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
-app.post('/posts_news', checkAuth, postCreateValidation, handleValidationErrors, PostController.createNews);
-app.post('/posts_reviews', checkAuth, postCreateValidation, handleValidationErrors, PostController.createReviews);
-app.post('/posts_articles', checkAuth, postCreateValidation, handleValidationErrors, PostController.createArticles);
+
 app.delete('/posts/:id', checkAuth, PostController.remove);
 app.patch(
   '/posts/:id',
