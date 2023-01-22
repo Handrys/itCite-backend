@@ -5,7 +5,7 @@ import cors from 'cors';
 
 import mongoose from 'mongoose';
 
-import { registerValidation, loginValidation, postCreateValidation } from './validations.js';
+import { registerValidation, loginValidation, postCreateValidation, CommentCreateValidation } from './validations.js';
 
 import { handleValidationErrors, checkAuth } from './utils/index.js';
 
@@ -61,19 +61,27 @@ app.get('/test', (req,res) => {
 })
 
 app.get('/posts', PostController.getAll);
-app.get('/posts_news', PostController.getAllNews);
 app.get('/posts/tags', PostController.getLastTags);
 app.get('/posts/:id', PostController.getOne);
 
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
 
 app.delete('/posts/:id', checkAuth, PostController.remove);
+
 app.patch(
   '/posts/:id',
   checkAuth,
   postCreateValidation,
   handleValidationErrors,
   PostController.update,
+);
+
+app.patch(
+  '/posts/:id/addComment',
+  checkAuth,
+ /*  CommentCreateValidation, */
+  handleValidationErrors,
+  PostController.addComment,
 );
 
 app.listen(process.env.PORT || 4444, (err) => {

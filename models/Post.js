@@ -28,6 +28,13 @@ const PostSchema = new mongoose.Schema(
       type: String,
 
     },
+    comments : [
+      {
+        author: { type: mongoose.Schema.Types.Mixed, ref: 'User', required: true },
+        text: { type: String, required: true }, 
+        createdAt: {type: String, required: true }
+      }
+    ],
     image: String,
   },
   {

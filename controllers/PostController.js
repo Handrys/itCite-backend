@@ -3,6 +3,7 @@ import PostNewsModel from '../models/PostNews.js';
 import PostReviewsModel from '../models/PostReviews.js'
 import PostArticlesModel from '../models/PostArticles.js'
 
+
 export const getLastTags = async (req, res) => {
   try {
     const posts = await PostModel.find().limit(5).exec();
@@ -152,7 +153,7 @@ export const create = async (req, res) => {
       categoryPresent: req.body.categoryPresent,
       title: req.body.title,
       description: req.body.description,
-      image: req.body.image
+      image: req.body.image,
     });
 
     const post = await doc.save();
@@ -264,3 +265,47 @@ export const update = async (req, res) => {
     });
   }
 };
+
+export const addComment = async (req, res) => {
+  try {
+    const commentId = req.params.id;
+   
+    await PostModel.updateOne(
+      {
+        _id: commentId,
+      },
+      {
+        comments: req.body
+      },
+    );
+
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось создать комментарий',
+    });
+  }
+};
+
+/* 
+export const addComment  = async (req, res) => {
+  try {
+    const doc = new CommentModel({
+      postId: req.body.postId,
+      author: req.body.author,
+      text: req.body.text
+    });
+
+    const post = await doc.save();
+
+    res.json(post);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось создать статью',
+    });
+  }
+}; */
