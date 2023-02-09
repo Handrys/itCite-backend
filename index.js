@@ -84,6 +84,14 @@ app.patch(
   PostController.addComment,
 );
 
+app.patch(
+  '/posts/:id/likeToggle',
+  checkAuth,
+ /*  CommentCreateValidation, */
+  handleValidationErrors,
+  PostController.likeToggle,
+);
+
 app.listen(process.env.PORT || 4444, (err) => {
   if (err) {
     return console.log(err);

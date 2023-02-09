@@ -290,6 +290,30 @@ export const addComment = async (req, res) => {
   }
 };
 
+export const likeToggle = async (req, res) => {
+  try {
+    const commentId = req.params.id;
+   
+    await PostModel.updateOne(
+      {
+        _id: commentId,
+      },
+      {
+        likes: req.body
+      },
+    );
+
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Ошибка при добавлении/удалении лайка',
+    });
+  }
+};
+
 /* 
 export const addComment  = async (req, res) => {
   try {

@@ -35,6 +35,11 @@ const PostSchema = new mongoose.Schema(
         createdAt: {type: String, required: true }
       }
     ],
+    likes: [
+      {
+        author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+      }
+    ],
     image: String,
   },
   {
