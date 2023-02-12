@@ -1,4 +1,5 @@
 import PostModel from '../models/Post.js';
+import UserModel from '../models/User.js';
 import PostNewsModel from '../models/PostNews.js';
 import PostReviewsModel from '../models/PostReviews.js'
 import PostArticlesModel from '../models/PostArticles.js'
@@ -167,82 +168,11 @@ export const create = async (req, res) => {
   }
 };
 
-export const createNews = async (req, res) => {
-  try {
-    const doc = new PostNewsModel({
-      publish_date: req.body.publish_date,
-      author: req.body.author,
-      id: req.body.id,
-      category: req.body.category,
-      categoryPresent: req.body.categoryPresent,
-      title: req.body.title,
-      description: req.body.description,
-      image: req.body.image
-    });
-
-    const post = await doc.save();
-
-    res.json(post);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      message: 'Не удалось создать статью',
-    });
-  }
-};
-
-export const createReviews = async (req, res) => {
-  try {
-    const doc = new PostReviewsModel({
-      publish_date: req.body.publish_date,
-      author: req.body.author,
-      id: req.body.id,
-      category: req.body.category,
-      categoryPresent: req.body.categoryPresent,
-      title: req.body.title,
-      description: req.body.description,
-      image: req.body.image
-    });
-
-    const post = await doc.save();
-
-    res.json(post);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      message: 'Не удалось создать статью',
-    });
-  }
-};
-
-export const createArticles = async (req, res) => {
-  try {
-    const doc = new PostArticlesModel({
-      publish_date: req.body.publish_date,
-      author: req.body.author,
-      id: req.body.id,
-      category: req.body.category,
-      categoryPresent: req.body.categoryPresent,
-      title: req.body.title,
-      description: req.body.description,
-      image: req.body.image
-    });
-
-    const post = await doc.save();
-
-    res.json(post);
-  } catch (err) {
-    console.log(err);
-    res.status(500).json({
-      message: 'Не удалось создать статью',
-    });
-  }
-};
 
 export const update = async (req, res) => {
   try {
     const postId = req.params.id;
-  
+
     await PostModel.updateOne(
       {
         _id: postId,
@@ -269,7 +199,7 @@ export const update = async (req, res) => {
 export const addComment = async (req, res) => {
   try {
     const commentId = req.params.id;
-   
+
     await PostModel.updateOne(
       {
         _id: commentId,
@@ -292,17 +222,20 @@ export const addComment = async (req, res) => {
 
 export const likeToggle = async (req, res) => {
   try {
-    const commentId = req.params.id;
-   
-    await PostModel.updateOne(
+    const likeId = req.params.id;
+    
+    await PostModel.findOneAndUpdate(
       {
-        _id: commentId,
+        _id: likeId,
       },
       {
         likes: req.body
       },
+      {
+        returnDocument: 'after'
+      }
     );
-
+    console.log(req.body)
     res.json({
       success: true,
     });
@@ -313,6 +246,9 @@ export const likeToggle = async (req, res) => {
     });
   }
 };
+
+
+
 
 /* 
 export const addComment  = async (req, res) => {

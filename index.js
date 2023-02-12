@@ -84,10 +84,16 @@ app.patch(
   PostController.addComment,
 );
 
+/* app.patch(
+  '/posts/:id/likeToggle',
+  checkAuth,
+  handleValidationErrors,
+  PostController.likeToggle,
+); */
+
 app.patch(
   '/posts/:id/likeToggle',
   checkAuth,
- /*  CommentCreateValidation, */
   handleValidationErrors,
   PostController.likeToggle,
 );

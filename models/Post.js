@@ -37,7 +37,7 @@ const PostSchema = new mongoose.Schema(
     ],
     likes: [
       {
-        author: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true }
+        type: mongoose.Schema.Types.Mixed, ref: 'User', required: true 
       }
     ],
     image: String,
