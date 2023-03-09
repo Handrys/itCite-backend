@@ -98,6 +98,23 @@ app.patch(
   PostController.likeToggle,
 );
 
+
+app.post(
+  '/posts/:id/addLike',
+  checkAuth,
+  handleValidationErrors,
+  PostController.addLike,
+);
+
+app.delete('/posts/:id/removeLike/:likeId', checkAuth, PostController.removeLike);
+
+app.get(
+  '/posts/:id/getLikes',
+  checkAuth,
+  handleValidationErrors,
+  PostController.getLikes,
+);
+
 app.listen(process.env.PORT || 4444, (err) => {
   if (err) {
     return console.log(err);

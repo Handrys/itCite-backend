@@ -3,6 +3,7 @@ import UserModel from '../models/User.js';
 import PostNewsModel from '../models/PostNews.js';
 import PostReviewsModel from '../models/PostReviews.js'
 import PostArticlesModel from '../models/PostArticles.js'
+import LikeModel from '../models/Likes.js'
 
 
 export const getLastTags = async (req, res) => {
@@ -243,6 +244,109 @@ export const likeToggle = async (req, res) => {
     console.log(err);
     res.status(500).json({
       message: 'Ошибка при добавлении/удалении лайка',
+    });
+  }
+};
+
+export const addLike = async (req, res) => {
+  console.log(req.body)
+  try {
+    const doc = new LikeModel({
+      user: req.body.userId,
+      postId: req.body.postId,
+    });
+
+    const like = await doc.save();
+
+    res.json({like});
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось поставить лайк',
+    });
+  }
+};
+
+/* export const removeLike = async (req,res) => {
+    try {
+      const likeId = req.params.likeId;
+      const postId = req.params.postId;
+
+      console.log(req.params)
+      LikeModel.findByIdAndDelete(
+        {
+          _id: likeId
+        },
+        (err, doc) => {
+          if (err) {
+            console.log(err);
+            return res.status(500).json({
+              message: 'Не удалось удалить статью',
+            });
+          }
+  
+          if (!doc) {
+            return res.status(404).json({
+              message: 'Статья не найдена',
+            });
+          }
+      
+          res.json({
+            success: true,
+          });
+        },
+      );
+    } catch (err) {
+      console.log(err);
+      res.status(500).json({
+        message: 'Не удалось получить статьи',
+      });
+    }
+
+}; */
+
+export const removeLike = async (req, res) => {
+  try {
+    const likeId = req.params.likeId;
+    const postId = req.params.postId;
+
+    console.log(req.params)
+    const deletedLike = await LikeModel.findOneAndDelete(
+      {
+        _id: likeId,
+        post: postId, // Добавляем проверку, связан ли лайк с постом
+      },
+    );
+
+    if (!deletedLike) {
+      return res.status(404).json({
+        message: 'Лайк не найден',
+      });
+    }
+
+    res.json({
+      success: true,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось удалить лайк',
+    });
+  }
+};
+
+export const getLikes = async (req, res) => {
+  try {
+
+    const likes = await LikeModel.find({postId: req.params.id})
+    .populate('user')
+    .limit(5)
+    .exec()
+    res.json(likes);
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      message: 'Не удалось получить список лайков',
     });
   }
 };
