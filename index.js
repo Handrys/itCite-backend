@@ -110,7 +110,6 @@ app.delete('/posts/:id/removeLike/:likeId', checkAuth, PostController.removeLike
 
 app.get(
   '/posts/:id/getLikes',
-  checkAuth,
   handleValidationErrors,
   PostController.getLikes,
 );
