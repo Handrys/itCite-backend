@@ -5,11 +5,11 @@ import cors from 'cors';
 
 import mongoose from 'mongoose';
 
-import { registerValidation, loginValidation, postCreateValidation, CommentCreateValidation } from './validations.js';
+import { registerValidation, loginValidation, postCreateValidation, commentCreateValidation } from './validations.js';
 
 import { handleValidationErrors, checkAuth } from './utils/index.js';
 
-import { UserController, PostController } from './controllers/index.js';
+import { UserController, PostController, LikeController, CommentController } from './controllers/index.js';
 
 mongoose
   .connect('mongodb+srv://admin:admin123@itblog.ujcnuey.mongodb.net/?retryWrites=true&w=majority')
@@ -54,14 +54,14 @@ app.post('/upload', checkAuth, upload.single('image'), (req, res) => {
   });
 });
 
-app.get('/tags', PostController.getLastTags);
+
 
 app.get('/test', (req,res) => {
   res.send('is work...');
 })
 
 app.get('/posts', PostController.getAll);
-app.get('/posts/tags', PostController.getLastTags);
+
 app.get('/posts/:id', PostController.getOne);
 
 app.post('/posts', checkAuth, postCreateValidation, handleValidationErrors, PostController.create);
@@ -76,43 +76,49 @@ app.patch(
   PostController.update,
 );
 
-app.patch(
-  '/posts/:id/addComment',
-  checkAuth,
- /*  CommentCreateValidation, */
-  handleValidationErrors,
-  PostController.addComment,
-);
 
-/* app.patch(
-  '/posts/:id/likeToggle',
-  checkAuth,
-  handleValidationErrors,
-  PostController.likeToggle,
-); */
 
-app.patch(
-  '/posts/:id/likeToggle',
-  checkAuth,
-  handleValidationErrors,
-  PostController.likeToggle,
-);
-
+//================================== Лайки ===========================================
 
 app.post(
   '/posts/:id/addLike',
   checkAuth,
   handleValidationErrors,
-  PostController.addLike,
+  LikeController.addLike,
 );
 
-app.delete('/posts/:id/removeLike/:likeId', checkAuth, PostController.removeLike);
+app.delete('/posts/:id/removeLike/:likeId', checkAuth, LikeController.removeLike);
 
 app.get(
   '/posts/:id/getLikes',
   handleValidationErrors,
-  PostController.getLikes,
+  LikeController.getLikes,
 );
+
+
+
+//===================================================================================
+
+//================================== Комментарии ===========================================
+
+app.post(
+  '/posts/:id/addComment',
+  checkAuth,
+  handleValidationErrors,
+  commentCreateValidation,
+  CommentController.addComment,
+);
+
+app.delete('/posts/:id/removeComment/:commentId', checkAuth, CommentController.removeComment);
+
+app.get(
+  '/posts/:id/getComments',
+  handleValidationErrors,
+  CommentController.getComments,
+);
+
+
+//===================================================================================
 
 app.listen(process.env.PORT || 4444, (err) => {
   if (err) {
@@ -120,4 +126,4 @@ app.listen(process.env.PORT || 4444, (err) => {
   }
 
   console.log('Server OK');
-});
+})
