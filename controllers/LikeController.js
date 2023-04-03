@@ -30,16 +30,27 @@ export const likeToggle = async (req, res) => {
 };
 
 export const addLike = async (req, res) => {
-  console.log(req.body)
   try {
-    const doc = new LikeModel({
-      user: req.body.userId,
-      postId: req.body.postId,
+    const { userId, postId } = req.body;
+
+    // Проверяем, есть ли уже лайк от пользователя для этого поста
+    const post = await PostModel.findById(postId);
+    const existingLike = post.likes.find((like) => like.user.toString() === userId);
+    if (existingLike) {
+      return res.status(400).json({
+        message: 'Вы уже поставили лайк на этот пост',
+      });
+    }
+
+    // Если лайка еще нет, то создаем новый лайк
+    const like = new LikeModel({
+      user: userId,
+      postId: postId,
     });
 
-    const like = await doc.save();
+    await like.save();
 
-    res.json({like});
+    res.json({ like });
   } catch (err) {
     console.log(err);
     res.status(500).json({
