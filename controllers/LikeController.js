@@ -34,8 +34,7 @@ export const addLike = async (req, res) => {
     const { userId, postId } = req.body;
 
     // Проверяем, есть ли уже лайк от пользователя для этого поста
-    const post = await PostModel.findById(postId);
-    const existingLike = post.likes.find((like) => like.user.toString() === userId);
+    const existingLike = await LikeModel.findOne({ user: userId, postId: postId });
     if (existingLike) {
       return res.status(400).json({
         message: 'Вы уже поставили лайк на этот пост',
